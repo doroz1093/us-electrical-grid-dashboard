@@ -1,0 +1,152 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 207.77777777777777,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 0,
+            "y": 0
+          },
+          "nodeIndex": "fact_operational",
+          "nodeLineageTag": "74145ac4-3052-4313-8d97-91fe7ff81f6c",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 284,
+            "y": 0
+          },
+          "nodeIndex": "fact_reliability",
+          "nodeLineageTag": "0c1534d9-866e-44c2-8736-663715545b66",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 568,
+            "y": 0
+          },
+          "nodeIndex": "fact_sales",
+          "nodeLineageTag": "c857c5e3-1100-4349-908a-30045482e64f",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 852,
+            "y": 0
+          },
+          "nodeIndex": "vw_reliability_by_region",
+          "nodeLineageTag": "191979fd-ea05-4e9b-ba0e-6b592b033b89",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 1136,
+            "y": 26
+          },
+          "nodeIndex": "vw_revenue_efficiency",
+          "nodeLineageTag": "10adf07e-97f8-4850-a572-bcdb6c6801fe",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 835,
+            "y": 665
+          },
+          "nodeIndex": "vw_state_energy_summary",
+          "nodeLineageTag": "44b8c721-6452-48a6-a574-c90ff363da96",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 287.33333333333348,
+            "y": 691.66666666666674
+          },
+          "nodeIndex": "vw_utility_sales_by_sector",
+          "nodeLineageTag": "98d4fc1a-a1d1-40f9-a34a-9f97e0a32ed3",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 450.08333333333348,
+            "y": 524.25
+          },
+          "nodeIndex": "dim_nerc_region",
+          "nodeLineageTag": "18ab0a79-6830-432c-b39a-57cbe9c58c9a",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 8
+        },
+        {
+          "location": {
+            "x": 1038.2499999999998,
+            "y": 425.08333333333337
+          },
+          "nodeIndex": "dim_ownership_type",
+          "nodeLineageTag": "dfbc1074-76f1-4feb-bf24-8109a2645df4",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 10
+        },
+        {
+          "location": {
+            "x": 1420,
+            "y": 431.83333333333337
+          },
+          "nodeIndex": "dim_state",
+          "nodeLineageTag": "c62a9f69-544e-45a7-be56-d8fb7ce5b172",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 9
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 90,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

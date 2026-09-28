@@ -1,0 +1,73 @@
+relationship a066a7ad-c965-9966-6422-98808c3abd2b
+	fromColumn: fact_operational.nerc_region
+	toColumn: dim_nerc_region.nerc_region
+
+relationship dee1530d-7d84-1df4-05eb-a291a5095a3a
+	fromColumn: vw_reliability_by_region.nerc_region
+	toColumn: dim_nerc_region.nerc_region
+
+relationship dacb2380-8fd5-c0d8-e2cf-770bfca5ff86
+	fromColumn: vw_state_energy_summary.nerc_region
+	toColumn: dim_nerc_region.nerc_region
+
+relationship 7685a0a4-e583-b103-8eaf-72674d768cb3
+	fromColumn: fact_operational.ownership_type
+	toColumn: dim_ownership_type.ownership_type
+
+relationship 1d88eced-5bb9-59de-3d48-5d5d96fc1576
+	fromColumn: fact_sales.ownership_type
+	toColumn: dim_ownership_type.ownership_type
+
+relationship 391905b8-8538-7745-4212-059559b82d97
+	fromColumn: vw_reliability_by_region.ownership_type
+	toColumn: dim_ownership_type.ownership_type
+
+relationship e414c6a3-51c0-45b6-0cd6-fd0f71e6d3f3
+	fromColumn: vw_utility_sales_by_sector.ownership_type
+	toColumn: dim_ownership_type.ownership_type
+
+relationship AutoDetected_258f7a18-5900-4ec3-9524-fa1a8e4477de
+	fromColumn: vw_reliability_by_region.state
+	toColumn: dim_state.state
+
+relationship AutoDetected_03979e4e-c5b6-4b41-80d5-51288c8e54b7
+	fromColumn: vw_revenue_efficiency.state
+	toColumn: dim_state.state
+
+relationship AutoDetected_8d88d59e-8d48-4a69-8b22-d3c92f8212cd
+	fromColumn: vw_state_energy_summary.state
+	toColumn: dim_state.state
+
+relationship AutoDetected_d910d77e-7712-47e5-8716-19abd663d0f9
+	fromColumn: vw_utility_sales_by_sector.state
+	toColumn: dim_state.state
+
+relationship AutoDetected_0ab3866f-d6b0-451c-ae03-51fcf3883d8b
+	fromColumn: fact_operational.state
+	toColumn: dim_state.state
+
+relationship AutoDetected_7f4faa81-588e-4055-87e6-d5edbda08313
+	fromColumn: fact_reliability.state
+	toColumn: dim_state.state
+
+relationship AutoDetected_6ed06a22-c209-4df3-aaef-981b9e31be09
+	fromColumn: fact_sales.state
+	toColumn: dim_state.state
+
+relationship AutoDetected_8b318158-a649-40ca-8d14-7aa09331dffa
+	isActive: false
+	fromColumn: dim_state.nerc_region
+	toColumn: dim_nerc_region.nerc_region
+
+relationship 790a0a92-5dd9-5f12-fd78-791c350599d5
+	fromColumn: fact_sales.'dim_state.nerc_region'
+	toColumn: dim_nerc_region.nerc_region
+
+relationship dd197cf8-9c89-418b-8223-9bbfb803588f
+	fromColumn: fact_reliability.ownership_type
+	toColumn: dim_ownership_type.ownership_type
+
+relationship b4bf7b7f-b894-4f12-ac6b-78befd0e056b
+	fromColumn: vw_revenue_efficiency.ownership_type
+	toColumn: dim_ownership_type.ownership_type
+

@@ -1,0 +1,439 @@
+table fact_operational
+	lineageTag: 74145ac4-3052-4313-8d97-91fe7ff81f6c
+
+	measure 'Total Net Generation MWh' = ```
+			
+			SUM ( fact_operational[net_generation_mwh] )
+			
+			```
+		lineageTag: ca4fac22-6f53-473e-93c3-6410e184856a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Sources MWh' = ```
+			
+			SUM ( fact_operational[total_sources_mwh] )
+			
+			```
+		lineageTag: 43ebef1d-7933-474e-b04b-86f3786b9216
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Energy Losses MWh' = ```
+			
+			SUM ( fact_operational[total_energy_losses_mwh] )
+			
+			```
+		lineageTag: a9354295-2f9e-426c-a4ce-8d8f86371e3c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Wholesale Purchases MWh' = ```
+			
+			SUM ( fact_operational[wholesale_purchases_mwh] )
+			
+			```
+		lineageTag: 1ca9d66f-dd9b-4b86-8b9a-f826d84d631c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Loss Rate %' = ```
+			
+			DIVIDE ( [Total Energy Losses MWh], [Total Sources MWh], 0 )
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: f4cbaaeb-e544-4035-949f-313ac967c709
+
+	measure 'Purchase Dependency %' = ```
+			
+			DIVIDE ( [Total Wholesale Purchases MWh], [Total Sources MWh], 0 )
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 803e7916-a6c4-42a5-bcdd-705ab13217b4
+
+	measure 'Self Sufficiency Index' = ```
+			
+			DIVIDE ( [Total Net Generation MWh], [Total Sources MWh], 0 )
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: c643ace1-a6eb-4b60-b8e3-975548c38fe3
+
+	measure 'Summer Peak Demand MW' = ```
+			
+			SUM ( fact_operational[summer_peak_demand_mw] )
+			
+			```
+		lineageTag: 0d5190c8-be5b-4ced-8ad3-6b2d2275a9ad
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Winter Peak Demand MW' = ```
+			
+			SUM ( fact_operational[winter_peak_demand_mw] )
+			
+			```
+		lineageTag: a29b08ed-3b11-4e69-a746-1403188cca8d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Supply Vulnerability Score' = ```
+			
+			ROUND ( ( [Purchase Dependency %] * 0.6 + [Loss Rate %] * 0.4 ) * 100, 1 )
+			
+			```
+		lineageTag: 1998d14d-10a2-41a2-a15b-4592b7d45ade
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Load Imbalance Score' = ```
+			
+			DIVIDE (
+			    ABS ( [Summer Peak Demand MW] - [Winter Peak Demand MW] ),
+			    ( [Summer Peak Demand MW] + [Winter Peak Demand MW] ) / 2,
+			    0
+			) * 100
+			
+			```
+		lineageTag: 2ae81d66-007d-43f4-88f4-debf4e8928c7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Loss Rate Risk Flag' = ```
+			
+			IF ( [Loss Rate %] > 0.08, "HIGH RISK",
+			    IF ( [Loss Rate %] > 0.05, "ELEVATED", "NORMAL" ) )
+			
+			```
+		lineageTag: a030dbb5-4c8d-443a-8286-113928863743
+
+	column op_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 704ec90c-f93a-474c-bbad-f9a231a06c00
+		summarizeBy: none
+		sourceColumn: op_id
+
+		annotation SummarizationSetBy = User
+
+	column data_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 61d158d4-befb-4e37-bf55-2c3f83111fa5
+		summarizeBy: none
+		sourceColumn: data_year
+
+		annotation SummarizationSetBy = User
+
+	column utility_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 8958d69d-0f93-4277-96f9-84eb54ba69d1
+		summarizeBy: none
+		sourceColumn: utility_number
+
+		annotation SummarizationSetBy = User
+
+	column utility_name
+		dataType: string
+		lineageTag: de7179ab-689b-46e9-abc0-22b2aff07834
+		summarizeBy: none
+		sourceColumn: utility_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: eef73e6f-e1d9-4c69-9a18-b2d1b95d19bb
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column ownership_type
+		dataType: string
+		lineageTag: e666983e-709e-48eb-b201-fa37f6363044
+		summarizeBy: none
+		sourceColumn: ownership_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column nerc_region
+		dataType: string
+		lineageTag: 515a05b5-c0c2-413d-88ba-101ad5ef126c
+		summarizeBy: none
+		sourceColumn: nerc_region
+
+		annotation SummarizationSetBy = Automatic
+
+	column summer_peak_demand_mw
+		dataType: double
+		lineageTag: 90087148-e486-41d4-a7ca-7681650c5ad5
+		summarizeBy: sum
+		sourceColumn: summer_peak_demand_mw
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column winter_peak_demand_mw
+		dataType: double
+		lineageTag: ca9dc67c-4a65-4bb3-a842-fedfa60284bc
+		summarizeBy: sum
+		sourceColumn: winter_peak_demand_mw
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column net_generation_mwh
+		dataType: double
+		lineageTag: 57059a4f-6079-431f-a559-0f96de4f324e
+		summarizeBy: sum
+		sourceColumn: net_generation_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column wholesale_purchases_mwh
+		dataType: double
+		lineageTag: a179796c-96ef-4d8e-a341-9707306a23df
+		summarizeBy: sum
+		sourceColumn: wholesale_purchases_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column exchange_received_mwh
+		dataType: double
+		lineageTag: b00cbd95-3203-4288-9621-d896c6f43b68
+		summarizeBy: sum
+		sourceColumn: exchange_received_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column exchange_delivered_mwh
+		dataType: double
+		lineageTag: 0b029945-fb29-4b33-ba7a-2235c32873b2
+		summarizeBy: sum
+		sourceColumn: exchange_delivered_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column net_power_exchanged_mwh
+		dataType: double
+		lineageTag: 2e9266c6-a7ea-431d-b002-0127e29c42b5
+		summarizeBy: sum
+		sourceColumn: net_power_exchanged_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column wheeled_received_mwh
+		dataType: double
+		lineageTag: e218a0e3-25b7-42cd-8d58-8b2a395cdd96
+		summarizeBy: sum
+		sourceColumn: wheeled_received_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column wheeled_delivered_mwh
+		dataType: double
+		lineageTag: 5ffd1129-9d12-4182-ae40-c637745e3096
+		summarizeBy: sum
+		sourceColumn: wheeled_delivered_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column net_wheeled_mwh
+		dataType: double
+		lineageTag: 928fd705-7d84-4315-9d5c-3a3fd921d3eb
+		summarizeBy: sum
+		sourceColumn: net_wheeled_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column transmission_losses_mwh
+		dataType: double
+		lineageTag: 468f6686-1f48-4991-9cc9-d444f8db3fce
+		summarizeBy: sum
+		sourceColumn: transmission_losses_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_sources_mwh
+		dataType: double
+		lineageTag: 8dbb9e63-1a88-428f-b66a-03788e41e27a
+		summarizeBy: sum
+		sourceColumn: total_sources_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column sales_ultimate_mwh
+		dataType: double
+		lineageTag: 16b8df01-f3ae-48f9-93c2-c436230bbb8c
+		summarizeBy: sum
+		sourceColumn: sales_ultimate_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column sales_resale_mwh
+		dataType: double
+		lineageTag: 9c417dbf-e7e9-490b-9cce-815b6b757a82
+		summarizeBy: sum
+		sourceColumn: sales_resale_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column furnished_free_mwh
+		dataType: double
+		lineageTag: 420e4dca-fa26-4c16-81e9-0b0572b48a0f
+		summarizeBy: sum
+		sourceColumn: furnished_free_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column consumed_free_mwh
+		dataType: double
+		lineageTag: 6571a140-c59f-4072-9b45-e87147b172af
+		summarizeBy: sum
+		sourceColumn: consumed_free_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_energy_losses_mwh
+		dataType: double
+		lineageTag: cf4fdbae-1886-4691-a49d-0b486e963a1a
+		summarizeBy: sum
+		sourceColumn: total_energy_losses_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_disposition_mwh
+		dataType: double
+		lineageTag: 6966b6be-121d-4483-a077-eb2f51f61fcb
+		summarizeBy: sum
+		sourceColumn: total_disposition_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column from_retail_sales_000
+		dataType: double
+		lineageTag: 165f50e0-576c-4073-9430-a34e62269d99
+		summarizeBy: sum
+		sourceColumn: from_retail_sales_000
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column from_delivery_customers_000
+		dataType: double
+		lineageTag: 9c986a48-be7f-4b15-ae3c-51cf9f1c43a0
+		summarizeBy: sum
+		sourceColumn: from_delivery_customers_000
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column from_sales_resale_000
+		dataType: double
+		lineageTag: 020bc49c-16fc-4f90-8319-0379417aa9b0
+		summarizeBy: sum
+		sourceColumn: from_sales_resale_000
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column from_credits_000
+		dataType: double
+		lineageTag: fbf4402d-7a3b-40af-a45c-cbe526b3ade4
+		summarizeBy: sum
+		sourceColumn: from_credits_000
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column from_transmission_000
+		dataType: double
+		lineageTag: 4d893fc4-8925-4a9c-89bb-0566b5ee23ba
+		summarizeBy: sum
+		sourceColumn: from_transmission_000
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column from_other_000
+		dataType: double
+		lineageTag: 2ed73584-0e48-4344-860e-b6c3eca855d7
+		summarizeBy: sum
+		sourceColumn: from_other_000
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_revenue_000
+		dataType: double
+		lineageTag: ee49816a-0905-4162-9512-a59ab8c39816
+		summarizeBy: sum
+		sourceColumn: total_revenue_000
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column data_type
+		dataType: string
+		lineageTag: 2bda991e-2335-4155-b9ca-bbf545200d9e
+		summarizeBy: none
+		sourceColumn: data_type
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_operational = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("DANIEL_O_PC\SQLEXPRESS", "EnergyWorkforce_DB"),
+				    dbo_fact_operational = Source{[Schema="dbo",Item="fact_operational"]}[Data]
+				in
+				    dbo_fact_operational
+
+	annotation PBI_ResultType = Table
+

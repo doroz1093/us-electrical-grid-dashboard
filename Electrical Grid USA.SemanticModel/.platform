@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Electrical Grid USA"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "3a95bf4b-4246-40b9-8e25-1e466acf9e78"
+  }
+}

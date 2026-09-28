@@ -1,0 +1,27 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["vw_reliability_by_region","vw_revenue_efficiency","vw_state_energy_summary","vw_utility_sales_by_sector","fact_operational","fact_reliability","fact_sales","dim_nerc_region","dim_ownership_type","dim_state"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table vw_reliability_by_region
+ref table vw_revenue_efficiency
+ref table vw_state_energy_summary
+ref table vw_utility_sales_by_sector
+ref table fact_operational
+ref table fact_reliability
+ref table fact_sales
+ref table dim_nerc_region
+ref table dim_ownership_type
+ref table dim_state
+
+ref cultureInfo en-US
+

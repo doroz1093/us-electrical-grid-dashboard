@@ -1,0 +1,22 @@
+table dim_nerc_region
+	lineageTag: 18ab0a79-6830-432c-b39a-57cbe9c58c9a
+
+	column nerc_region
+		dataType: string
+		lineageTag: a14df66c-2b53-46cb-9cb2-a7cab1c91b68
+		summarizeBy: none
+		sourceColumn: nerc_region
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_nerc_region = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WcvRWitWJVnJ1dgyCMIKc/UPALLcgZ2cww8MTSkH5vp7B/hBGEIT2C4DK+EWCqSA3KAURDQaaCWEEBIDpkCBXMB3uCtIXCwA=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [nerc_region = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"nerc_region", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

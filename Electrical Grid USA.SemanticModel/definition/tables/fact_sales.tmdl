@@ -1,0 +1,386 @@
+table fact_sales
+	lineageTag: c857c5e3-1100-4349-908a-30045482e64f
+
+	measure 'Total Revenue $000' = ```
+			
+			SUM ( fact_sales[total_revenue_000] )
+			
+			```
+		formatString: \$#,0
+		lineageTag: 029c67b4-600f-4cfe-9e9b-3d34356eacce
+
+	measure 'Total Revenue $' = ```
+			
+			[Total Revenue $000] * 1000
+			
+			```
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: c595673f-14de-42f1-a436-aa1784cc2103
+
+	measure 'Residential Revenue $000' = ```
+			
+			SUM ( fact_sales[res_revenue_000] )
+			
+			```
+		lineageTag: f4e23251-7685-4640-a8c8-9f80bfcd7751
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Commercial Revenue $000' = ```
+			
+			SUM ( fact_sales[com_revenue_000] )
+			
+			```
+		lineageTag: 4d36a1b5-8a80-4724-bbaf-004b1a37f855
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Industrial Revenue $000' = ```
+			
+			SUM ( fact_sales[ind_revenue_000] )
+			
+			```
+		lineageTag: 87aa1de2-a80f-4083-a7b6-ac7feb60efe4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Transportation Revenue $000' = ```
+			
+			SUM ( fact_sales[trans_revenue_000] )
+			
+			```
+		lineageTag: 6eac2172-3806-41fd-9b68-26a46215748b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Sales MWh' = ```
+			
+			SUM ( fact_sales[total_sales_mwh] )
+			
+			```
+		lineageTag: c5770fb7-6a29-48b2-990b-7e46124c8148
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Customers' = ```
+			
+			SUM ( fact_sales[total_customers] )
+			
+			```
+		formatString: #,0
+		lineageTag: ffd6fcdf-66c3-4bf3-8571-5dc5dc1f1ac7
+
+	measure 'Revenue per MWh $/MWh' = ```
+			
+			DIVIDE ( [Total Revenue $], [Total Sales MWh], 0 )
+			
+			```
+		formatString: \$#,0.00
+		lineageTag: 937d04af-e7b7-45e2-b45d-253f00d4a2f1
+
+	measure 'Revenue per Customer $' = ```
+			
+			DIVIDE ( [Total Revenue $], [Total Customers], 0 )
+			
+			```
+		formatString: \$#,0
+		lineageTag: 2b43482e-8ef4-4c73-8ea2-1193eb6e328b
+
+	measure 'Residential Revenue Share %' = ```
+			
+			DIVIDE ( [Residential Revenue $000], [Total Revenue $000], 0 )
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: ba0c5013-589a-4b20-9d09-b689ee9e9a7a
+
+	measure 'Commercial Revenue Share %' = ```
+			
+			DIVIDE ( [Commercial Revenue $000], [Total Revenue $000], 0 )
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 7ceedee5-4be3-4461-b932-9e53f47e122f
+
+	measure 'Industrial Revenue Share %' = ```
+			
+			DIVIDE ( [Industrial Revenue $000], [Total Revenue $000], 0 )
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 12ae8f94-5371-45e0-aef1-43c72cef732e
+
+	measure 'Industrial Dependency Flag' = ```
+			IF ( [Industrial Revenue Share %] > 0.35, "HIGH RISK",
+			    IF ( [Industrial Revenue Share %] > 0.25, "MODERATE", "HEALTHY" ) )
+			
+			```
+		lineageTag: 70aa0618-650b-4765-8fda-69c9b14dfe99
+
+	measure 'Residential Revenue $' = [Residential Revenue $000] * 1000
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 1c1062f5-316e-468b-9e1c-6e74e2f6a856
+
+	measure 'Commercial Revenue $' = [Commercial Revenue $000] * 1000
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 37f90065-dc71-46c6-8732-fda2d3141cb4
+
+	measure 'Industrial Revenue $' = [Industrial Revenue $000] * 1000
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 44cd764e-3f76-4f6b-945f-696b52c6b509
+
+	measure 'Transportation Revenue $' = [Transportation Revenue $000] * 1000
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 78435c9a-8719-443a-bd73-8a4fe09060b7
+
+	column sale_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c75a31c9-3bea-4b7d-8737-f7f8d9cf3b15
+		summarizeBy: none
+		sourceColumn: sale_id
+
+		annotation SummarizationSetBy = User
+
+	column data_year
+		dataType: int64
+		formatString: 0
+		lineageTag: feeccb56-d2a1-4abc-aa65-2e51535432ba
+		summarizeBy: none
+		sourceColumn: data_year
+
+		annotation SummarizationSetBy = User
+
+	column utility_number
+		dataType: int64
+		formatString: 0
+		lineageTag: d210c5e9-4ed8-44f0-a24b-5ce6775bac1a
+		summarizeBy: none
+		sourceColumn: utility_number
+
+		annotation SummarizationSetBy = User
+
+	column utility_name
+		dataType: string
+		lineageTag: 65644d39-a6a3-43ae-b24e-0f0902d4b0c7
+		summarizeBy: none
+		sourceColumn: utility_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column part
+		dataType: string
+		lineageTag: 4370f0d3-0434-4805-848d-0178869ae716
+		summarizeBy: none
+		sourceColumn: part
+
+		annotation SummarizationSetBy = Automatic
+
+	column service_type
+		dataType: string
+		lineageTag: 4231a298-821c-4e2a-8ace-5af0ea2fe7d2
+		summarizeBy: none
+		sourceColumn: service_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column data_type
+		dataType: string
+		lineageTag: c646bfee-4469-40f7-aac3-7f29b8913d08
+		summarizeBy: none
+		sourceColumn: data_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: e3417c46-9c2f-4b60-add0-d4bb31b161e4
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column ownership_type
+		dataType: string
+		lineageTag: 90c7ac81-d289-4415-8879-0e1a1e881155
+		summarizeBy: none
+		sourceColumn: ownership_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column ba_code
+		dataType: string
+		lineageTag: 907096f2-e946-4892-8378-fa363f73c361
+		summarizeBy: none
+		sourceColumn: ba_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column res_revenue_000
+		dataType: double
+		lineageTag: 0c1b8527-810b-44eb-99fd-873ed5222ed6
+		summarizeBy: sum
+		sourceColumn: res_revenue_000
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column res_sales_mwh
+		dataType: double
+		lineageTag: 643bcc4b-ced0-4121-b8aa-f0ab4ae9ba0d
+		summarizeBy: sum
+		sourceColumn: res_sales_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column res_customers
+		dataType: int64
+		formatString: 0
+		lineageTag: 693fad17-18e8-4426-91ce-9bed329a23fb
+		summarizeBy: sum
+		sourceColumn: res_customers
+
+		annotation SummarizationSetBy = Automatic
+
+	column com_revenue_000
+		dataType: double
+		lineageTag: 45e992b2-9a3c-40ee-8fda-5b2c5dda40e7
+		summarizeBy: sum
+		sourceColumn: com_revenue_000
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column com_sales_mwh
+		dataType: double
+		lineageTag: 82b60b36-3eaa-42e0-92b6-5eb2a63a1e5b
+		summarizeBy: sum
+		sourceColumn: com_sales_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column com_customers
+		dataType: int64
+		formatString: 0
+		lineageTag: f34fb2ec-0918-484e-b5cb-173cb77208c4
+		summarizeBy: sum
+		sourceColumn: com_customers
+
+		annotation SummarizationSetBy = Automatic
+
+	column ind_revenue_000
+		dataType: double
+		lineageTag: b2470c44-e46a-4ed4-b5b8-5d5e6f0ba3a8
+		summarizeBy: sum
+		sourceColumn: ind_revenue_000
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ind_sales_mwh
+		dataType: double
+		lineageTag: 738d338e-199b-4bdf-8ba8-8af58fbba930
+		summarizeBy: sum
+		sourceColumn: ind_sales_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ind_customers
+		dataType: int64
+		formatString: 0
+		lineageTag: 8f3f636a-a5e9-461b-8b04-ce3bc2538456
+		summarizeBy: sum
+		sourceColumn: ind_customers
+
+		annotation SummarizationSetBy = Automatic
+
+	column trans_revenue_000
+		dataType: double
+		lineageTag: a29cc470-42d4-41b7-9f63-d35ad220e197
+		summarizeBy: sum
+		sourceColumn: trans_revenue_000
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column trans_sales_mwh
+		dataType: double
+		lineageTag: 8ddd74a2-63c8-4f23-9381-35fd6342c898
+		summarizeBy: sum
+		sourceColumn: trans_sales_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column trans_customers
+		dataType: int64
+		formatString: 0
+		lineageTag: d7d3ddf4-244f-4848-a107-6ac33a3e359d
+		summarizeBy: sum
+		sourceColumn: trans_customers
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_revenue_000
+		dataType: double
+		lineageTag: cc558693-f180-433a-8efb-8ea3871bbc1c
+		summarizeBy: sum
+		sourceColumn: total_revenue_000
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_sales_mwh
+		dataType: double
+		lineageTag: 52c5661f-70a7-47ef-ae89-ea96f8304a67
+		summarizeBy: sum
+		sourceColumn: total_sales_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_customers
+		dataType: int64
+		formatString: 0
+		lineageTag: bae54612-6ade-4a19-83c0-e777f31a500a
+		summarizeBy: sum
+		sourceColumn: total_customers
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'dim_state.nerc_region'
+		dataType: string
+		lineageTag: ffbb944e-c947-4d6c-817e-d0f45e3c98a2
+		summarizeBy: none
+		sourceColumn: dim_state.nerc_region
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_sales = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("DANIEL_O_PC\SQLEXPRESS", "EnergyWorkforce_DB"),
+				    dbo_fact_sales = Source{[Schema="dbo",Item="fact_sales"]}[Data],
+				    #"Merged Queries" = Table.NestedJoin(dbo_fact_sales, {"state"}, dim_state, {"state"}, "dim_state", JoinKind.LeftOuter),
+				    #"Expanded dim_state" = Table.ExpandTableColumn(#"Merged Queries", "dim_state", {"nerc_region"}, {"dim_state.nerc_region"})
+				in
+				    #"Expanded dim_state"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

@@ -1,0 +1,22 @@
+table dim_ownership_type
+	lineageTag: dfbc1074-76f1-4feb-bf24-8109a2645df4
+
+	column ownership_type
+		dataType: string
+		lineageTag: c03c9c14-d51e-4427-af2d-242e8b0960e5
+		summarizeBy: none
+		sourceColumn: ownership_type
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_ownership_type = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("ZY5BC8IwDIX/StjZPzEHgoficIKHsUNdQxvWNdJmG/57S9VdvOXley95fV8d0VEwIA5BoWCshkNfNTzPSyB5QeOYRoTa2ohWC/84PzFqoRWLPqHJ0pf5HFZM2QiXLaApK5VvjfT8GnYFahIL9SKOY/5VYMuehMYMu+VhaKVEHAq5omjy0PKGEZSO0962Ey2fHreoQ5op7aG7Y49Je/zLDW8=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [ownership_type = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"ownership_type", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

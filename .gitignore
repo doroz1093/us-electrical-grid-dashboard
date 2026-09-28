@@ -1,0 +1,35 @@
+# Power BI local files
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+# Old single-file report (replaced by the .pbip project)
+*.pbix
+
+# Backups made during the report fixes (Git history replaces these)
+_backup_*/
+
+# Local working copies
+Claude outputs/
+
+# Office lock files and logs
+~$*
+error_log*
+
+# Older/duplicate project guides
+EnergyGrid PowerBI ProjectGuide*.docx
+EnergyGrid_PowerBI_ProjectGuide.docx
+Power  BI instructions.docx
+
+# Raw data: keep one source file per dataset, skip working copies
+Raw Data/EIA930_*
+Raw Data/nat4d_*
+Raw Data/natsector_*
+Raw Data/*.csv.xlsx
+Raw Data/Operational_final*.csv
+Raw Data/Operational_pipe*
+Raw Data/Operational_clean*
+Raw Data/Operational_Data_2024_fixed.csv
+Raw Data/Operational_Data_2024_final.csv
+Raw Data/Sales_pipe.csv
+Raw Data/Sales_2024.csv
+Raw Data/*_clean.csv

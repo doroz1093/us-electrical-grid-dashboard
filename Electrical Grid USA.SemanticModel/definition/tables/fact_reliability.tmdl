@@ -1,0 +1,373 @@
+table fact_reliability
+	lineageTag: 0c1534d9-866e-44c2-8736-663715545b66
+
+	measure 'Weighted Avg SAIDI All' = ```
+			
+			VAR _rows = FILTER ( fact_reliability, NOT ISBLANK ( fact_reliability[ieee_saidi_all] ) && NOT ISBLANK ( fact_reliability[ieee_num_customers] ) )
+			RETURN DIVIDE ( SUMX ( _rows, fact_reliability[ieee_saidi_all] * fact_reliability[ieee_num_customers] ), SUMX ( _rows, fact_reliability[ieee_num_customers] ) )
+			
+			```
+		lineageTag: ca4ff6b7-c8ec-4be8-b671-7e6e56a2c6c8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Weighted Avg SAIDI No MED' = ```
+			
+			VAR _rows = FILTER ( fact_reliability, NOT ISBLANK ( fact_reliability[ieee_saidi_no_med] ) && NOT ISBLANK ( fact_reliability[ieee_num_customers] ) )
+			RETURN DIVIDE ( SUMX ( _rows, fact_reliability[ieee_saidi_no_med] * fact_reliability[ieee_num_customers] ), SUMX ( _rows, fact_reliability[ieee_num_customers] ) )
+			
+			```
+		lineageTag: ea9340ea-4388-426b-b6c3-ea87022c259e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Weighted Avg SAIFI All' = ```
+			
+			VAR _rows = FILTER ( fact_reliability, NOT ISBLANK ( fact_reliability[ieee_saifi_all] ) && NOT ISBLANK ( fact_reliability[ieee_num_customers] ) )
+			RETURN DIVIDE ( SUMX ( _rows, fact_reliability[ieee_saifi_all] * fact_reliability[ieee_num_customers] ), SUMX ( _rows, fact_reliability[ieee_num_customers] ) )
+			
+			```
+		lineageTag: e3931b85-c2e4-44a0-8239-3fec772bc635
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Weighted Avg CAIDI All' = ```
+			
+			DIVIDE ( [Weighted Avg SAIDI All], [Weighted Avg SAIFI All], BLANK() )
+			
+			```
+		lineageTag: 2cd150f0-ab23-4aad-a056-545cea9d86b4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Storm Impact Index (min)' = ```
+			
+			[Weighted Avg SAIDI All] - [Weighted Avg SAIDI No MED]
+			
+			```
+		lineageTag: df58e4da-5797-4294-a390-b8bc91c03c70
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Grid Stability Score' = ```
+			
+			// 0-100 score on controllable reliability: customer-weighted SAIDI excluding major event days.
+			// 0 min = 100 points, 500 min or more = 0 points. Storms are measured separately (Storm Impact Index).
+			VAR ceilingMinutes = 500
+			VAR saidi = [Weighted Avg SAIDI No MED]
+			RETURN IF ( ISBLANK ( saidi ), BLANK (), MAX ( 0, ( 1 - saidi / ceilingMinutes ) * 100 ) )
+			
+			```
+		lineageTag: 91c4d51b-714f-4104-8fa6-7d879313378c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Customers Reliability' = ```
+			
+			SUM ( fact_reliability[ieee_num_customers] )
+			
+			```
+		formatString: 0
+		lineageTag: 3efc14b8-b372-463e-ace0-f29b5eea8b7b
+
+	measure 'Customers Served' =
+			
+			SUM(fact_reliability[other_num_customers])
+		formatString: 0
+		lineageTag: 6d273024-d592-4306-8c3c-cee0861878cd
+
+	column rel_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 2f9bae46-56c3-4e48-bcbd-fe865fcaea99
+		summarizeBy: none
+		sourceColumn: rel_id
+
+		annotation SummarizationSetBy = User
+
+	column data_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 6e78e7de-8995-4a94-9284-97f7f9a385dc
+		summarizeBy: none
+		sourceColumn: data_year
+
+		annotation SummarizationSetBy = User
+
+	column utility_number
+		dataType: int64
+		formatString: 0
+		lineageTag: c0e4d94f-5cb8-4ff5-80ec-1dd347824cef
+		summarizeBy: none
+		sourceColumn: utility_number
+
+		annotation SummarizationSetBy = User
+
+	column utility_name
+		dataType: string
+		lineageTag: e2f9ab88-ebaa-4975-943e-9999472bfe77
+		summarizeBy: none
+		sourceColumn: utility_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: 49660cd2-46fc-44ec-9a1d-8e69da0b6110
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column ownership_type
+		dataType: string
+		lineageTag: edb8eb76-d899-4f3d-b887-815b593772ea
+		summarizeBy: none
+		sourceColumn: ownership_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column ieee_saidi_all
+		dataType: double
+		lineageTag: 989beb46-4057-4ecd-89ef-e1cc588da6bf
+		summarizeBy: sum
+		sourceColumn: ieee_saidi_all
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ieee_saifi_all
+		dataType: double
+		lineageTag: 7b0a83b9-ffeb-4655-83ae-8df8b2b34242
+		summarizeBy: sum
+		sourceColumn: ieee_saifi_all
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ieee_caidi_all
+		dataType: double
+		lineageTag: e511a9d2-f877-459d-a04d-7bc8d5edb70b
+		summarizeBy: sum
+		sourceColumn: ieee_caidi_all
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ieee_saidi_no_med
+		dataType: double
+		lineageTag: 7a0702aa-0f22-42bb-b04f-4d9c9ebc93d6
+		summarizeBy: sum
+		sourceColumn: ieee_saidi_no_med
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ieee_saifi_no_med
+		dataType: double
+		lineageTag: d469872f-3212-4d1e-8bca-d059034644fe
+		summarizeBy: sum
+		sourceColumn: ieee_saifi_no_med
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ieee_caidi_no_med
+		dataType: double
+		lineageTag: a60e9e3b-91c9-40ab-bf41-b679cfbcd3e3
+		summarizeBy: sum
+		sourceColumn: ieee_caidi_no_med
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ieee_saidi_los
+		dataType: double
+		lineageTag: ff62b1ad-8229-45be-8494-6a82915aac23
+		summarizeBy: sum
+		sourceColumn: ieee_saidi_los
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ieee_saifi_los
+		dataType: double
+		lineageTag: 22a833f1-dafe-4e87-bbf8-e5f8ee6ccc2a
+		summarizeBy: sum
+		sourceColumn: ieee_saifi_los
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ieee_caidi_los
+		dataType: double
+		lineageTag: 5e5ceeb7-72b9-4372-942c-a240fb12bc06
+		summarizeBy: sum
+		sourceColumn: ieee_caidi_los
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ieee_num_customers
+		dataType: int64
+		formatString: 0
+		lineageTag: fb5c1379-4734-441a-abba-cf17d141d260
+		summarizeBy: none
+		sourceColumn: ieee_num_customers
+
+		annotation SummarizationSetBy = User
+
+	column ieee_highest_voltage
+		dataType: double
+		lineageTag: f79675af-a25f-447c-9f72-b1ce97630612
+		summarizeBy: sum
+		sourceColumn: ieee_highest_voltage
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ieee_auto_outages
+		dataType: string
+		lineageTag: 43a40ed2-011e-41a2-8218-48ae298a7029
+		summarizeBy: none
+		sourceColumn: ieee_auto_outages
+
+		annotation SummarizationSetBy = Automatic
+
+	column other_saidi_all
+		dataType: double
+		lineageTag: b3a2393c-9dc2-4ffd-b082-ac50cb0e702d
+		summarizeBy: sum
+		sourceColumn: other_saidi_all
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column other_saifi_all
+		dataType: double
+		lineageTag: 69eded64-eef3-4eb2-bb87-02da4b33849f
+		summarizeBy: sum
+		sourceColumn: other_saifi_all
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column other_caidi_all
+		dataType: double
+		lineageTag: f2a750ed-1072-46d7-9e3d-461debebe427
+		summarizeBy: sum
+		sourceColumn: other_caidi_all
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column other_saidi_no_med
+		dataType: double
+		lineageTag: 94ee88f8-337d-431d-8301-b30442c9bf35
+		summarizeBy: sum
+		sourceColumn: other_saidi_no_med
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column other_saifi_no_med
+		dataType: double
+		lineageTag: e3fc3138-0de5-4c3d-94a8-6b068e835876
+		summarizeBy: sum
+		sourceColumn: other_saifi_no_med
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column other_caidi_no_med
+		dataType: double
+		lineageTag: 743c0035-1dc0-4d9d-affc-5a913d17243e
+		summarizeBy: sum
+		sourceColumn: other_caidi_no_med
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column other_num_customers
+		dataType: int64
+		formatString: 0
+		lineageTag: 28ee2281-8254-4d17-8a0e-a33c2b4a7ebe
+		summarizeBy: sum
+		sourceColumn: other_num_customers
+
+		annotation SummarizationSetBy = Automatic
+
+	column other_inactive_accts
+		dataType: string
+		lineageTag: 5475e958-718d-43d7-8b55-63a802f3d6cf
+		summarizeBy: none
+		sourceColumn: other_inactive_accts
+
+		annotation SummarizationSetBy = Automatic
+
+	column other_momentary
+		dataType: string
+		lineageTag: 5132e9cd-efce-4efc-9416-a30ccb9965d1
+		summarizeBy: none
+		sourceColumn: other_momentary
+
+		annotation SummarizationSetBy = Automatic
+
+	column other_highest_voltage
+		dataType: double
+		lineageTag: 37f34ad7-e152-40b8-9045-819554ff895e
+		summarizeBy: sum
+		sourceColumn: other_highest_voltage
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column other_auto_outages
+		dataType: string
+		lineageTag: 5fc39849-a809-44d6-b0c2-56fd38d88976
+		summarizeBy: none
+		sourceColumn: other_auto_outages
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_reliability = m
+		mode: import
+		source =
+				let
+				    // EIA-861 reliability file read with proper CSV quoting. The SQL copy of this table was loaded with
+				    // commas inside quoted values split into extra columns (e.g. "Northern Lights, Inc" and "39,641"),
+				    // which shifted 136 rows and wiped customer counts. Reading the source file directly avoids that.
+				    Source = Csv.Document(File.Contents("C:\Users\doroz\OneDrive\Desktop\Projects\Electrical Grid\Raw Data\Reliability_2024.csv"), [Delimiter=",", Columns=28, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    DataRows = Table.Skip(Source, 3),
+				    Renamed = Table.RenameColumns(DataRows, List.Zip({Table.ColumnNames(DataRows), {"data_year", "utility_number", "utility_name", "state", "ownership_type", "ieee_saidi_all", "ieee_saifi_all", "ieee_caidi_all", "ieee_saidi_no_med", "ieee_saifi_no_med", "ieee_caidi_no_med", "ieee_saidi_los", "ieee_saifi_los", "ieee_caidi_los", "ieee_num_customers", "ieee_highest_voltage", "ieee_auto_outages", "other_saidi_all", "other_saifi_all", "other_caidi_all", "other_saidi_no_med", "other_saifi_no_med", "other_caidi_no_med", "other_num_customers", "other_inactive_accts", "other_momentary", "other_highest_voltage", "other_auto_outages"}})),
+				    Trimmed = Table.TransformColumns(Renamed, {}, Text.Trim),
+				    DotsToNull = Table.ReplaceValue(Trimmed, ".", null, Replacer.ReplaceValue, Table.ColumnNames(Trimmed)),
+				    BlanksToNull0 = Table.ReplaceValue(DotsToNull, "", null, Replacer.ReplaceValue, Table.ColumnNames(DotsToNull)),
+				    BlanksToNull = Table.SelectRows(BlanksToNull0, each [data_year] <> null and Text.Length([data_year]) = 4 and Text.Length([state] ?? "") = 2),
+				    NoThousands = Table.TransformColumns(BlanksToNull, List.Transform({"data_year", "utility_number", "ieee_num_customers", "other_num_customers", "ieee_saidi_all", "ieee_saifi_all", "ieee_caidi_all", "ieee_saidi_no_med", "ieee_saifi_no_med", "ieee_caidi_no_med", "ieee_saidi_los", "ieee_saifi_los", "ieee_caidi_los", "ieee_highest_voltage", "other_saidi_all", "other_saifi_all", "other_caidi_all", "other_saidi_no_med", "other_saifi_no_med", "other_caidi_no_med", "other_highest_voltage"}, (c) => {c, each if _ = null then null else Text.Remove(_, ","), type nullable text})),
+				    Typed = Table.TransformColumnTypes(NoThousands, {{"data_year", Int64.Type}, {"utility_number", Int64.Type}, {"ieee_num_customers", Int64.Type}, {"other_num_customers", Int64.Type}, {"ieee_saidi_all", type number}, {"ieee_saifi_all", type number}, {"ieee_caidi_all", type number}, {"ieee_saidi_no_med", type number}, {"ieee_saifi_no_med", type number}, {"ieee_caidi_no_med", type number}, {"ieee_saidi_los", type number}, {"ieee_saifi_los", type number}, {"ieee_caidi_los", type number}, {"ieee_highest_voltage", type number}, {"other_saidi_all", type number}, {"other_saifi_all", type number}, {"other_caidi_all", type number}, {"other_saidi_no_med", type number}, {"other_saifi_no_med", type number}, {"other_caidi_no_med", type number}, {"other_highest_voltage", type number}, {"utility_name", type text}, {"state", type text}, {"ownership_type", type text}, {"ieee_auto_outages", type text}, {"other_inactive_accts", type text}, {"other_momentary", type text}, {"other_auto_outages", type text}}, "en-US"),
+				    NoErrors = Table.ReplaceErrorValues(Typed, List.Transform(Table.ColumnNames(Typed), each {_, null})),
+				    Indexed = Table.AddIndexColumn(NoErrors, "rel_id", 1, 1, Int64.Type),
+				    Result = Table.ReorderColumns(Indexed, {"rel_id", "data_year", "utility_number", "utility_name", "state", "ownership_type", "ieee_saidi_all", "ieee_saifi_all", "ieee_caidi_all", "ieee_saidi_no_med", "ieee_saifi_no_med", "ieee_caidi_no_med", "ieee_saidi_los", "ieee_saifi_los", "ieee_caidi_los", "ieee_num_customers", "ieee_highest_voltage", "ieee_auto_outages", "other_saidi_all", "other_saifi_all", "other_caidi_all", "other_saidi_no_med", "other_saifi_no_med", "other_caidi_no_med", "other_num_customers", "other_inactive_accts", "other_momentary", "other_highest_voltage", "other_auto_outages"})
+				in
+				    Result
+
+	annotation PBI_ResultType = Table
+

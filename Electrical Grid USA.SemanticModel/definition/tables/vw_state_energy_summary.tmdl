@@ -1,0 +1,172 @@
+table vw_state_energy_summary
+	lineageTag: 44b8c721-6452-48a6-a574-c90ff363da96
+
+	measure 'Total Revenue $ (Regional)' =
+			
+			SUMX(vw_state_energy_summary, vw_state_energy_summary[total_revenue_000] * 1000)
+		lineageTag: e65b8618-d78e-436e-9444-1e699f8b6894
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Revenue per MWh (Regional)' =
+			
+			DIVIDE(
+			    SUMX(vw_state_energy_summary, vw_state_energy_summary[total_revenue_000] * 1000),
+			    SUM(vw_state_energy_summary[total_sales_mwh]),
+			    0
+			)
+		lineageTag: 45ef1140-f010-4911-99e2-c643794485f0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Customers (Regional)' =
+			
+			SUM(vw_revenue_efficiency[total_customers])
+		formatString: 0
+		lineageTag: 73a36893-af26-44a3-9d28-be3b852a6214
+
+	measure 'Revenue per Customer (Regional)' =
+			
+			DIVIDE(
+			    SUMX(vw_state_energy_summary, vw_state_energy_summary[total_revenue_000] * 1000),
+			    SUM(vw_revenue_efficiency[total_customers]),
+			    0
+			)
+		lineageTag: 17cd1193-9672-431c-a84e-f15e663f33d9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Industrial Revenue Share % (Regional)' =
+			
+			DIVIDE(
+			    SUM(vw_utility_sales_by_sector[industrial_revenue_000]),
+			    SUM(vw_utility_sales_by_sector[industrial_revenue_000])
+			        + SUM(vw_utility_sales_by_sector[commercial_revenue_000])
+			        + SUM(vw_utility_sales_by_sector[residential_revenue_000]),
+			    0
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: d642b0de-6169-469c-8a4d-b82f6d6aa9f9
+
+	measure 'Industry Risk (Regional)' =
+			
+			IF([Industrial Revenue Share % (Regional)] > 0.35, "HIGH RISK",
+			IF([Industrial Revenue Share % (Regional)] > 0.25, "MODERATE", "HEALTHY"))
+		lineageTag: 7947bad7-1e69-4948-a6ea-3a35715a3d4d
+
+	column state
+		dataType: string
+		lineageTag: 74fa0c6a-9063-4bd0-b228-c70eabaf69fa
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column nerc_region
+		dataType: string
+		lineageTag: e6837ac0-b00a-4aa7-90b9-d96cc437c4d2
+		summarizeBy: none
+		sourceColumn: nerc_region
+
+		annotation SummarizationSetBy = Automatic
+
+	column utility_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 40bf26c9-334a-44c4-ab90-ff858c7c10c1
+		summarizeBy: sum
+		sourceColumn: utility_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_generation_mwh
+		dataType: double
+		lineageTag: 446735d3-8684-482a-a066-dfeb684fa1d4
+		summarizeBy: sum
+		sourceColumn: total_generation_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_purchases_mwh
+		dataType: double
+		lineageTag: fc863e84-b5f7-4047-8270-76d9703afe87
+		summarizeBy: sum
+		sourceColumn: total_purchases_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_sources_mwh
+		dataType: double
+		lineageTag: bf3d07a1-b3c6-4722-90b1-2f7a3c73a605
+		summarizeBy: sum
+		sourceColumn: total_sources_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_sales_mwh
+		dataType: double
+		lineageTag: fec6c56f-3de4-4565-aacd-8bbf82df5e72
+		summarizeBy: sum
+		sourceColumn: total_sales_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_losses_mwh
+		dataType: double
+		lineageTag: b1d8ac22-7a76-4462-9fcd-fdc9e3593344
+		summarizeBy: sum
+		sourceColumn: total_losses_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_revenue_000
+		dataType: double
+		lineageTag: 3aa98cb5-8c08-482a-9996-22854f49cf2e
+		summarizeBy: sum
+		sourceColumn: total_revenue_000
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_summer_peak_mw
+		dataType: double
+		lineageTag: 0550eb0f-1ebf-4502-b6d6-0c8358be2300
+		summarizeBy: sum
+		sourceColumn: total_summer_peak_mw
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_winter_peak_mw
+		dataType: double
+		lineageTag: a0aa4123-9e15-4b81-93e3-3b2122a041c1
+		summarizeBy: sum
+		sourceColumn: total_winter_peak_mw
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition vw_state_energy_summary = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("DANIEL_O_PC\SQLEXPRESS", "EnergyWorkforce_DB"),
+				    dbo_vw_state_energy_summary = Source{[Schema="dbo",Item="vw_state_energy_summary"]}[Data]
+				in
+				    dbo_vw_state_energy_summary
+
+	annotation PBI_ResultType = Table
+

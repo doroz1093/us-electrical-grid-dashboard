@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Electrical Grid USA"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "5f6a94ab-f1dc-4323-a089-f3d83164aa01"
+  }
+}

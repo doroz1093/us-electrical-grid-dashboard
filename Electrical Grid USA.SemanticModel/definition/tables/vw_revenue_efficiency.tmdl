@@ -1,0 +1,79 @@
+table vw_revenue_efficiency
+	lineageTag: 10adf07e-97f8-4850-a572-bcdb6c6801fe
+
+	column ownership_type
+		dataType: string
+		lineageTag: 1f23f0b0-790e-404d-b924-7adc0fe277f6
+		summarizeBy: none
+		sourceColumn: ownership_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: 737d66fc-71fb-4528-9cab-0a1e41381361
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_revenue_dollars
+		dataType: double
+		lineageTag: ad98291e-4233-4ae9-a6cc-bbffa421c6aa
+		summarizeBy: sum
+		sourceColumn: total_revenue_dollars
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_sales_mwh
+		dataType: double
+		lineageTag: 5489ec3d-bbcc-432b-9c0e-4bc3d1ced660
+		summarizeBy: sum
+		sourceColumn: total_sales_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column revenue_per_mwh
+		dataType: double
+		lineageTag: 9550e02b-b17c-4940-b53c-7cc26d849518
+		summarizeBy: sum
+		sourceColumn: revenue_per_mwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_customers
+		dataType: int64
+		formatString: 0
+		lineageTag: b1cf08d9-0cfc-4550-93ea-cd4275576f01
+		summarizeBy: sum
+		sourceColumn: total_customers
+
+		annotation SummarizationSetBy = Automatic
+
+	column revenue_per_customer
+		dataType: double
+		lineageTag: 581e62dd-03cc-4059-b1ac-94f4dc930c4f
+		summarizeBy: sum
+		sourceColumn: revenue_per_customer
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition vw_revenue_efficiency = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("DANIEL_O_PC\SQLEXPRESS", "EnergyWorkforce_DB"),
+				    dbo_vw_revenue_efficiency = Source{[Schema="dbo",Item="vw_revenue_efficiency"]}[Data]
+				in
+				    dbo_vw_revenue_efficiency
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,30 @@
+table dim_state
+	lineageTag: c62a9f69-544e-45a7-be56-d8fb7ce5b172
+
+	column state
+		dataType: string
+		lineageTag: 6e355d59-f208-42b2-b9a0-73e503c0668f
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column nerc_region
+		dataType: string
+		lineageTag: f989d3f7-5f49-45ee-9d52-50475bcae9bf
+		summarizeBy: none
+		sourceColumn: nerc_region
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_state = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("VZLRDcMgDER3yXeWQEAammAQUGgaZf81akpUnX+Qn2zfHYjznNQ2zf24Zq53rrNNelAS9GFqVg/SSlAQVJgo3mQ0U1pusABLd1vSPfdQ6LY6Jj567XrHpzDAoJXrEt7lu0dIW+6CMQ44UH0XXl5hXm8gorei5VDfE8TyQShmQQUjk8YeGRAhi7CiNT0hFXkhWAUduBZWWAsbPEhIuBUVzCWHElnkzZi3ELbKm4khlB++xK0rGlTxQZr4Ss2BQauw1Y7/3PUF", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [state = _t, nerc_region = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"state", type text}, {"nerc_region", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
